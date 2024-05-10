@@ -1,5 +1,5 @@
 
-name: workflow using Snyk with continue on error
+name: Snyk Scan
 on: push
 jobs:
   security:

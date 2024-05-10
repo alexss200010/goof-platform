@@ -7,7 +7,16 @@ jobs:
     steps:
       - uses: actions/checkout@master
   
-      - name: Run Snyk to check for vulnerabilities
+      - name: Snyk test to check for vulnerabilities
+        uses: snyk/actions@0.4.0
+        with:
+         command: test
+         args: --all-projects --org=e2e577ce-78d3-4a6e-80f7-b0f692f564d2
+        #continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk test to check for vulnerabilities
         uses: snyk/actions@0.4.0
         with:
          command: monitor

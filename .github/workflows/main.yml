@@ -12,7 +12,7 @@ jobs:
         uses: snyk/actions@0.4.0
         with:
          command: test
-         args: --all-projects --org=e2e577ce-78d3-4a6e-80f7-b0f692f564d2
+         args: --all-projects --org=e2e577ce-78d3-4a6e-80f7-b0f692f564d2 --fail-on=all
         #continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

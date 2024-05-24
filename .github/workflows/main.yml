@@ -1,6 +1,6 @@
 
 name: Snyk Scan
-on: push
+on: [push, pull_request]
 jobs:
   security:
     name: Snyk Scan - Branch ${{ github.ref_name }} and Run ID ${{ github.run_id }}
@@ -12,16 +12,16 @@ jobs:
         uses: snyk/actions@0.4.0
         with:
          command: test
-         args: --all-projects --org=e2e577ce-78d3-4a6e-80f7-b0f692f564d2 --fail-on=all
+         args: --all-projects --org=${{ secrets.SNYK_ORG }} --severity-threshold=high --fail-on=all
         #continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Snyk test to check for vulnerabilities
+      - name: Snyk monitor vulnerabilities and push to Snyk Cloud
         uses: snyk/actions@0.4.0
         with:
          command: monitor
-         args: --all-projects --org=e2e577ce-78d3-4a6e-80f7-b0f692f564d2
+         args: --all-projects --org=${{ secrets.SNYK_ORG }} --severity-threshold=high
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

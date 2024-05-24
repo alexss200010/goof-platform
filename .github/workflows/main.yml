@@ -3,7 +3,7 @@ name: Snyk Scan
 on: [push, pull_request]
 jobs:
   security:
-    name: Snyk Scan - Branch ${{ github.ref_name }} and Run ID ${{ github.run_id }}
+    name: Snyk Scan - Run ID ${{ github.run_id }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master

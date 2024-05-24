@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: '10'
           cache: 'npm'
 
       - name: Install dependencies
@@ -43,4 +43,4 @@ jobs:
 
       - name: Snyk Monitor
         run: |
-          snyk monitor
+          snyk monitor --org=${{ secrets.SNYK_ORG }}

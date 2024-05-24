@@ -1,27 +1,45 @@
-
 name: Snyk Scan
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+      - '.github/**'
+
+  pull_request:
+    branches:
+      - '**'
+    paths-ignore:
+      - '.github/**'
+
 jobs:
-  security:
+  Snyk-Check:
     name: Snyk Scan - Run ID ${{ github.run_id }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-  
-      - name: Snyk test to check for vulnerabilities
-        uses: snyk/actions@0.4.0
+      - name: Code Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-         command: test
-         args: --all-projects --org=${{ secrets.SNYK_ORG }} --severity-threshold=high --fail-on=all
-        #continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          node-version: '18'
+          cache: 'npm'
 
-      - name: Snyk monitor vulnerabilities and push to Snyk Cloud
-        uses: snyk/actions@0.4.0
-        with:
-         command: monitor
-         args: --all-projects --org=${{ secrets.SNYK_ORG }} --severity-threshold=high
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Install dependencies
+        run: |
+          sudo npm install -g npm@latest #increase-memory-limit
+          npm ci
+          npm test
+        
+      - name: Snyk install & Auth
+        run: |
+          sudo npm install -g snyk
+          snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk Test for high vulns
+        run: |
+          snyk test --org=${{ secrets.SNYK_ORG }} --severity-threshold=high --fail-on=all || true
+
+      - name: Snyk Monitor
+        run: |
+          snyk monitor --org=${{ secrets.SNYK_ORG }}

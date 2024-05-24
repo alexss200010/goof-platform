@@ -39,8 +39,8 @@ jobs:
 
       - name: Snyk Test for high vulns
         run: |
-          snyk test --org=${{ secrets.SNYK_ORG }} --all-projects --severity-threshold=high --fail-on=all || true
+          snyk test --all-projects --severity-threshold=high --fail-on=all || true
 
       - name: Snyk Monitor
         run: |
-          snyk monitor --org=${{ secrets.SNYK_ORG }}
+          snyk monitor
